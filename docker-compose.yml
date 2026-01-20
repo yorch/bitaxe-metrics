@@ -12,3 +12,13 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=3y'
       - '--web.enable-lifecycle'
+
+  json_exporter:
+    image: prometheuscommunity/json-exporter:latest
+    restart: unless-stopped
+    ports:
+      - 7979:7979
+    volumes:
+      - ./json_exporter.yml:/config.yml:ro
+    command:
+      - '--config.file=/config.yml'

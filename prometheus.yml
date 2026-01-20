@@ -8,6 +8,16 @@ scrape_configs:
       - targets: ['localhost:9090']
 
   - job_name: 'bitaxe'
-    metrics_path: /api/system/info
+    metrics_path: /probe
+    params:
+      module: [bitaxe]
     static_configs:
-      - targets: ['10.1.0.85']
+      - targets:
+          - http://10.1.0.85/api/system/info
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: json_exporter:7979

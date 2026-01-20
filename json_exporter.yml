@@ -1,0 +1,45 @@
+modules:
+  bitaxe:
+    metrics:
+      - name: bitaxe_power_watts
+        path: '{ .power }'
+        help: Power consumption in watts
+      - name: bitaxe_voltage
+        path: '{ .voltage }'
+        help: Voltage in millivolts
+      - name: bitaxe_current
+        path: '{ .current }'
+        help: Current in milliamps
+      - name: bitaxe_temp
+        path: '{ .temp }'
+        help: Temperature in celsius
+      - name: bitaxe_vr_temp
+        path: '{ .vrTemp }'
+        help: Voltage regulator temperature in celsius
+      - name: bitaxe_hashrate
+        path: '{ .hashRate }'
+        help: Hash rate in GH/s
+      - name: bitaxe_frequency
+        path: '{ .frequency }'
+        help: Frequency in MHz
+      - name: bitaxe_shares_accepted
+        path: '{ .sharesAccepted }'
+        help: Total accepted shares
+      - name: bitaxe_shares_rejected
+        path: '{ .sharesRejected }'
+        help: Total rejected shares
+      - name: bitaxe_best_diff
+        path: '{ .bestDiff }'
+        help: Best difficulty found
+      - name: bitaxe_best_session_diff
+        path: '{ .bestSessionDiff }'
+        help: Best session difficulty
+      - name: bitaxe_uptime_seconds
+        path: '{ .uptimeSeconds }'
+        help: Uptime in seconds
+      - name: bitaxe_fan_speed_percent
+        path: '{ .fanspeed }'
+        help: Fan speed percentage
+      - name: bitaxe_fan_rpm
+        path: '{ .fanrpm }'
+        help: Fan speed in RPM
