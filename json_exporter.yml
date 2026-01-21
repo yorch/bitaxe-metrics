@@ -1,27 +1,67 @@
 modules:
   bitaxe:
     metrics:
+      # Power metrics
       - name: bitaxe_power_watts
         path: '{ .power }'
         help: Power consumption in watts
-      - name: bitaxe_voltage
+      - name: bitaxe_voltage_mv
         path: '{ .voltage }'
         help: Voltage in millivolts
-      - name: bitaxe_current
+      - name: bitaxe_current_ma
         path: '{ .current }'
         help: Current in milliamps
-      - name: bitaxe_temp
+      - name: bitaxe_max_power_watts
+        path: '{ .maxPower }'
+        help: Maximum power limit in watts
+      - name: bitaxe_nominal_voltage
+        path: '{ .nominalVoltage }'
+        help: Nominal voltage
+      - name: bitaxe_core_voltage_mv
+        path: '{ .coreVoltage }'
+        help: Core voltage setting in millivolts
+      - name: bitaxe_core_voltage_actual_mv
+        path: '{ .coreVoltageActual }'
+        help: Actual core voltage in millivolts
+
+      # Temperature metrics
+      - name: bitaxe_temp_celsius
         path: '{ .temp }'
-        help: Temperature in celsius
-      - name: bitaxe_vr_temp
+        help: ASIC temperature in celsius
+      - name: bitaxe_temp2_celsius
+        path: '{ .temp2 }'
+        help: Secondary temperature sensor in celsius (-1 if not present)
+      - name: bitaxe_vr_temp_celsius
         path: '{ .vrTemp }'
         help: Voltage regulator temperature in celsius
-      - name: bitaxe_hashrate
+      - name: bitaxe_temp_target_celsius
+        path: '{ .temptarget }'
+        help: Target temperature in celsius
+      - name: bitaxe_overheat_mode
+        path: '{ .overheat_mode }'
+        help: Overheat mode active (1=yes, 0=no)
+
+      # Hashrate metrics
+      - name: bitaxe_hashrate_ghs
         path: '{ .hashRate }'
-        help: Hash rate in GH/s
-      - name: bitaxe_frequency
-        path: '{ .frequency }'
-        help: Frequency in MHz
+        help: Current hash rate in GH/s
+      - name: bitaxe_hashrate_1m_ghs
+        path: '{ .hashRate_1m }'
+        help: 1 minute average hash rate in GH/s
+      - name: bitaxe_hashrate_10m_ghs
+        path: '{ .hashRate_10m }'
+        help: 10 minute average hash rate in GH/s
+      - name: bitaxe_hashrate_1h_ghs
+        path: '{ .hashRate_1h }'
+        help: 1 hour average hash rate in GH/s
+      - name: bitaxe_expected_hashrate_ghs
+        path: '{ .expectedHashrate }'
+        help: Expected hash rate in GH/s
+      - name: bitaxe_error_percentage
+        path: '{ .errorPercentage }'
+        help: Error percentage
+
+      # Mining metrics
       - name: bitaxe_shares_accepted
         path: '{ .sharesAccepted }'
         help: Total accepted shares
@@ -30,16 +70,118 @@ modules:
         help: Total rejected shares
       - name: bitaxe_best_diff
         path: '{ .bestDiff }'
-        help: Best difficulty found
+        help: Best difficulty ever found
       - name: bitaxe_best_session_diff
         path: '{ .bestSessionDiff }'
-        help: Best session difficulty
+        help: Best difficulty this session
+      - name: bitaxe_pool_difficulty
+        path: '{ .poolDifficulty }'
+        help: Current pool difficulty
+      - name: bitaxe_block_found
+        path: '{ .blockFound }'
+        help: Number of blocks found
+      - name: bitaxe_block_height
+        path: '{ .blockHeight }'
+        help: Current block height
+      - name: bitaxe_network_difficulty
+        path: '{ .networkDifficulty }'
+        help: Current network difficulty
+
+      # ASIC metrics
+      - name: bitaxe_frequency_mhz
+        path: '{ .frequency }'
+        help: ASIC frequency in MHz
+      - name: bitaxe_small_core_count
+        path: '{ .smallCoreCount }'
+        help: Number of small cores
+      - name: bitaxe_overclock_enabled
+        path: '{ .overclockEnabled }'
+        help: Overclock enabled (1=yes, 0=no)
+      - name: bitaxe_asic_error_count
+        path: '{ .hashrateMonitor.asics[0].errorCount }'
+        help: ASIC error count
+
+      # Fan metrics
+      - name: bitaxe_fan_speed_percent
+        path: '{ .fanspeed }'
+        help: Current fan speed percentage
+      - name: bitaxe_fan_rpm
+        path: '{ .fanrpm }'
+        help: Fan 1 speed in RPM
+      - name: bitaxe_fan2_rpm
+        path: '{ .fan2rpm }'
+        help: Fan 2 speed in RPM
+      - name: bitaxe_autofan_enabled
+        path: '{ .autofanspeed }'
+        help: Auto fan speed enabled (1=yes, 0=no)
+      - name: bitaxe_manual_fan_speed_percent
+        path: '{ .manualFanSpeed }'
+        help: Manual fan speed setting percentage
+      - name: bitaxe_min_fan_speed_percent
+        path: '{ .minFanSpeed }'
+        help: Minimum fan speed percentage
+
+      # System metrics
       - name: bitaxe_uptime_seconds
         path: '{ .uptimeSeconds }'
         help: Uptime in seconds
-      - name: bitaxe_fan_speed_percent
-        path: '{ .fanspeed }'
-        help: Fan speed percentage
-      - name: bitaxe_fan_rpm
-        path: '{ .fanrpm }'
-        help: Fan speed in RPM
+      - name: bitaxe_free_heap_bytes
+        path: '{ .freeHeap }'
+        help: Free heap memory in bytes
+      - name: bitaxe_free_heap_internal_bytes
+        path: '{ .freeHeapInternal }'
+        help: Free internal heap memory in bytes
+      - name: bitaxe_free_heap_spiram_bytes
+        path: '{ .freeHeapSpiram }'
+        help: Free SPIRAM heap memory in bytes
+      - name: bitaxe_psram_available
+        path: '{ .isPSRAMAvailable }'
+        help: PSRAM available (1=yes, 0=no)
+
+      # WiFi metrics
+      - name: bitaxe_wifi_rssi_dbm
+        path: '{ .wifiRSSI }'
+        help: WiFi signal strength in dBm
+      - name: bitaxe_ap_enabled
+        path: '{ .apEnabled }'
+        help: Access point enabled (1=yes, 0=no)
+
+      # Stratum metrics
+      - name: bitaxe_stratum_port
+        path: '{ .stratumPort }'
+        help: Stratum server port
+      - name: bitaxe_stratum_suggested_difficulty
+        path: '{ .stratumSuggestedDifficulty }'
+        help: Stratum suggested difficulty
+      - name: bitaxe_stratum_extranonce_subscribe
+        path: '{ .stratumExtranonceSubscribe }'
+        help: Stratum extranonce subscribe enabled
+      - name: bitaxe_using_fallback_stratum
+        path: '{ .isUsingFallbackStratum }'
+        help: Using fallback stratum (1=yes, 0=no)
+      - name: bitaxe_fallback_stratum_port
+        path: '{ .fallbackStratumPort }'
+        help: Fallback stratum server port
+      - name: bitaxe_fallback_stratum_suggested_difficulty
+        path: '{ .fallbackStratumSuggestedDifficulty }'
+        help: Fallback stratum suggested difficulty
+      - name: bitaxe_stratum_response_time_ms
+        path: '{ .responseTime }'
+        help: Stratum response time in milliseconds
+      - name: bitaxe_pool_addr_family
+        path: '{ .poolAddrFamily }'
+        help: Pool address family (2=IPv4, 10=IPv6)
+
+      # Display metrics
+      - name: bitaxe_display_rotation
+        path: '{ .rotation }'
+        help: Display rotation setting
+      - name: bitaxe_display_inverted
+        path: '{ .invertscreen }'
+        help: Display inverted (1=yes, 0=no)
+      - name: bitaxe_display_timeout
+        path: '{ .displayTimeout }'
+        help: Display timeout in seconds (-1=disabled)
+      - name: bitaxe_stats_frequency
+        path: '{ .statsFrequency }'
+        help: Stats update frequency in seconds
