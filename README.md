@@ -45,6 +45,40 @@ Prometheus and Grafana monitoring stack for BitAxe Bitcoin miners. Collects metr
 
 5. Open Grafana at `http://localhost:3000` (login: `admin`/`admin`)
 
+## Troubleshooting
+
+- **Prometheus targets:** If Prometheus appears to miss targets, inspect active targets with:
+
+```bash
+curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[] | {job: .scrapePool, health: .health, lastError: .lastError}'
+```
+
+- **Prometheus UI:** Open `http://localhost:9090/targets` to view scrape status and service discovery details.
+
+- **Check `targets.yml` and config:** Ensure `prometheus.yml` references `targets.yml` and that `targets.yml` contains correct BitAxe URLs (they should include `/api/system/info`). View the file locally with:
+
+```bash
+cat targets.yml
+```
+
+- **JSON Exporter:** Confirm the JSON exporter is serving metrics and the endpoints are reachable:
+
+```bash
+curl -s http://localhost:7979/metrics | head -n 40
+```
+
+- **Docker status & logs:** See which services are running and inspect logs:
+
+```bash
+docker compose ps
+docker compose logs -f
+
+# After confirming service names, follow a single service (example):
+docker compose logs -f prometheus
+```
+
+- **Required tools:** The `jq` utility is used above for pretty output. Install with `brew install jq` if missing.
+
 ## Services
 
 | Service       | Port | Description                                    |
