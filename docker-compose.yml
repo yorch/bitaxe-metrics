@@ -3,21 +3,22 @@ services:
     image: prom/prometheus:latest
     restart: unless-stopped
     ports:
-      - 9090:9090
+      - ${PROMETHEUS_PORT:-9090}:9090
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./targets.yml:/etc/prometheus/targets.yml:ro
       - ./data/prometheus:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=3y'
+      - '--storage.tsdb.retention.time=${PROMETHEUS_RETENTION:-3y}'
       - '--web.enable-lifecycle'
 
   json_exporter:
     image: prometheuscommunity/json-exporter:latest
     restart: unless-stopped
     ports:
-      - 7979:7979
+      - ${JSON_EXPORTER_PORT:-7979}:7979
     volumes:
       - ./json_exporter.yml:/config.yml:ro
     command:
@@ -27,10 +28,10 @@ services:
     image: grafana/grafana:latest
     restart: unless-stopped
     ports:
-      - 3010:3000
+      - ${GRAFANA_PORT:-3000}:3000
     volumes:
       - ./data/grafana:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false

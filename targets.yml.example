@@ -1,0 +1,22 @@
+# Add your BitAxe miners here
+# Prometheus will auto-reload this file every 30 seconds
+
+# Single miner
+- targets:
+    - http://192.168.1.100/api/system/info
+  labels:
+    name: bitaxe-1
+
+# Multiple miners example:
+# - targets:
+#     - http://192.168.1.100/api/system/info
+#     - http://192.168.1.101/api/system/info
+#     - http://192.168.1.102/api/system/info
+#   labels:
+#     location: office
+#
+# - targets:
+#     - http://192.168.1.200/api/system/info
+#   labels:
+#     location: garage
+#     name: garage-axe

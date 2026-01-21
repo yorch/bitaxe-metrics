@@ -10,6 +10,7 @@ Prometheus and Grafana monitoring stack for BitAxe Bitcoin miners. Collects metr
 - **3-year data retention** by default
 - **Pre-configured Grafana dashboard** with organized panels
 - **Auto-discovery** of Prometheus datasource
+- **Hot-reload targets** without restarting services
 
 ## Quick Start
 
@@ -19,26 +20,72 @@ Prometheus and Grafana monitoring stack for BitAxe Bitcoin miners. Collects metr
    cd bitaxe-monitor
    ```
 
-2. Edit `prometheus.yml` and set your BitAxe IP address:
+2. Configure your environment:
+   ```bash
+   cp .env.example .env
+   cp targets.yml.example targets.yml
+   ```
+
+3. Edit `targets.yml` and set your BitAxe IP address:
    ```yaml
    - targets:
        - http://YOUR_BITAXE_IP/api/system/info
+     labels:
+       name: bitaxe-1
    ```
 
-3. Start the stack:
+4. Start the stack:
    ```bash
    docker compose up -d
    ```
 
-4. Open Grafana at `http://localhost:3010` (login: `admin`/`admin`)
+5. Open Grafana at `http://localhost:3000` (login: `admin`/`admin`)
 
 ## Services
 
 | Service | Port | Description |
 |---------|------|-------------|
-| Grafana | 3010 | Dashboards and visualization |
+| Grafana | 3000 | Dashboards and visualization |
 | Prometheus | 9090 | Metrics storage and querying |
 | JSON Exporter | 7979 | Converts BitAxe JSON API to Prometheus metrics |
+
+## Configuration
+
+All configuration is done through two files:
+
+### `.env` - Ports and Settings
+
+```bash
+# Ports
+PROMETHEUS_PORT=9090
+JSON_EXPORTER_PORT=7979
+GRAFANA_PORT=3000
+
+# Grafana
+GRAFANA_PASSWORD=admin
+
+# Data retention (e.g., 15d, 6m, 3y)
+PROMETHEUS_RETENTION=3y
+```
+
+### `targets.yml` - BitAxe Miners
+
+Add your miners here. Prometheus auto-reloads this file every 30 seconds.
+
+```yaml
+# Single miner
+- targets:
+    - http://192.168.1.100/api/system/info
+  labels:
+    name: bitaxe-1
+
+# Multiple miners with labels
+- targets:
+    - http://192.168.1.101/api/system/info
+    - http://192.168.1.102/api/system/info
+  labels:
+    location: office
+```
 
 ## Collected Metrics
 
@@ -51,32 +98,6 @@ Prometheus and Grafana monitoring stack for BitAxe Bitcoin miners. Collects metr
 | Cooling | Fan RPM, fan %, auto-fan status |
 | Network | WiFi RSSI, pool latency, pool status |
 | System | Uptime, free heap, frequency |
-
-## Configuration
-
-### Data Retention
-
-Edit `docker-compose.yml` to change retention period:
-```yaml
-- '--storage.tsdb.retention.time=3y'
-```
-
-### Multiple BitAxe Devices
-
-Add additional targets in `prometheus.yml`:
-```yaml
-- targets:
-    - http://10.1.0.85/api/system/info
-    - http://10.1.0.86/api/system/info
-    - http://10.1.0.87/api/system/info
-```
-
-### Grafana Password
-
-Change the default password in `docker-compose.yml`:
-```yaml
-- GF_SECURITY_ADMIN_PASSWORD=your_secure_password
-```
 
 ## Data Storage
 
